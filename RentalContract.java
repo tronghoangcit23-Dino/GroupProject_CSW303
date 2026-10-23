@@ -7,29 +7,39 @@ public class RentalContract {
     private Tenant tenant;
     private Date startDate;
     private Date endDate;
-    private BigDecimal rentAmount;
+    private BigDecimal rentAmount;   // rental rate locked in when the contract is signed
     private boolean isActive;
 
+    // Constructor: check that the property is available and endDate > startDate.
+    // If any check fails, throw an exception and do NOT change the property's status.
     public RentalContract(int contractID, Property property, Tenant tenant, Date startDate, Date endDate) {
+        if (property == null || tenant == null) {
+            throw new IllegalArgumentException("Property and tenant must not be null.");
+        }
         if (!property.isAvailable()) {
             throw new IllegalArgumentException("Property is not available for rent.");
         }
-        if (endDate == null || startDate == null || !endDate.after(startDate)) {
+        if (startDate == null || endDate == null || !endDate.after(startDate)) {
             throw new IllegalArgumentException("End date must be later than start date.");
         }
 
+        // All checks passed: assign values (copy the dates so outside code cannot modify them)
         this.contractID = contractID;
         this.property = property;
         this.tenant = tenant;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.rentAmount = property.getRentalRate();
+        this.startDate = new Date(startDate.getTime());
+        this.endDate = new Date(endDate.getTime());
+        this.rentAmount = property.getRentalRate();   // BigDecimal is immutable, so later rate changes do not affect it
         this.isActive = true;
 
+        // Mark the property as rented only after everything is valid
         property.setAvailable(false);
     }
 
+    // Terminate: deactivate the contract and make the property available again
     public void terminate() {
+        // If already terminated, do nothing, so an old contract can never
+        // re-open a property that has since been rented to someone else
         if (!this.isActive) {
             return;
         }
@@ -37,6 +47,7 @@ public class RentalContract {
         this.property.setAvailable(true);
     }
 
+    // Getters
     public int getContractID() {
         return contractID;
     }
@@ -50,11 +61,11 @@ public class RentalContract {
     }
 
     public Date getStartDate() {
-        return startDate;
+        return new Date(startDate.getTime());
     }
 
     public Date getEndDate() {
-        return endDate;
+        return new Date(endDate.getTime());
     }
 
     public BigDecimal getRentAmount() {
