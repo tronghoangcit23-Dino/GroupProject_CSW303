@@ -1,45 +1,45 @@
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.Date;
 
 public class RentalContract {
     private int contractID;
-    private Tenant tenant;
     private Property property;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private BigDecimal rentalRate;   // rental rate locked in at the time the contract is signed
+    private Tenant tenant;
+    private Date startDate;
+    private Date endDate;
+    private BigDecimal rentAmount;   // rental rate locked in when the contract is signed
     private boolean isActive;
 
     // Constructor: check that the property is available and endDate > startDate.
     // If any check fails, throw an exception and do NOT change the property's status.
-    public RentalContract(int contractID, Tenant tenant, Property property,
-                          LocalDate startDate, LocalDate endDate) {
-        if (tenant == null || property == null || startDate == null || endDate == null) {
-            throw new IllegalArgumentException("Tenant, property and dates must not be null.");
+    public RentalContract(int contractID, Property property, Tenant tenant, Date startDate, Date endDate) {
+        if (property == null || tenant == null) {
+            throw new IllegalArgumentException("Property and tenant must not be null.");
         }
         if (!property.isAvailable()) {
-            throw new IllegalStateException("Property is not available for rent.");
+            throw new IllegalArgumentException("Property is not available for rent.");
         }
-        if (!endDate.isAfter(startDate)) {
-            throw new IllegalArgumentException("End date must be after start date.");
+        if (startDate == null || endDate == null || !endDate.after(startDate)) {
+            throw new IllegalArgumentException("End date must be later than start date.");
         }
 
-        // Only assign values and change the property's status after all checks pass
+        // All checks passed: assign values (copy the dates so outside code cannot modify them)
         this.contractID = contractID;
-        this.tenant = tenant;
         this.property = property;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.rentalRate = property.getRentalRate();
+        this.tenant = tenant;
+        this.startDate = new Date(startDate.getTime());
+        this.endDate = new Date(endDate.getTime());
+        this.rentAmount = property.getRentalRate();
         this.isActive = true;
 
+        // Mark the property as rented only after everything is valid
         property.setAvailable(false);
     }
 
     // Terminate: deactivate the contract and make the property available again
     public void terminate() {
-        // If the contract is already terminated, do nothing,
-        // so we never re-open a property that has since been rented to someone else
+        // If already terminated, do nothing, so an old contract can never
+        // re-open a property that has since been rented to someone else
         if (!this.isActive) {
             return;
         }
@@ -48,11 +48,31 @@ public class RentalContract {
     }
 
     // Getters
-    public int getContractID() { return contractID; }
-    public Tenant getTenant() { return tenant; }
-    public Property getProperty() { return property; }
-    public LocalDate getStartDate() { return startDate; }
-    public LocalDate getEndDate() { return endDate; }
-    public BigDecimal getRentalRate() { return rentalRate; }
-    public boolean isActive() { return isActive; }
+    public int getContractID() {
+        return contractID;
+    }
+
+    public Property getProperty() {
+        return property;
+    }
+
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public Date getStartDate() {
+        return new Date(startDate.getTime());
+    }
+
+    public Date getEndDate() {
+        return new Date(endDate.getTime());
+    }
+
+    public BigDecimal getRentAmount() {
+        return rentAmount;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
 }
