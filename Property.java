@@ -1,33 +1,45 @@
-import java.math.BigDecimal;
-
 public class Property {
     private int propertyID;
     private String description;
-    private BigDecimal rentalRate;
+    private double rentalRate;
     private boolean isAvailable;
 
-    // Constructor: check (rentalRate > 0), assign values and set (isAvailable = true)
-    public Property(int propertyID, String description, BigDecimal rentalRate) {
-        if (rentalRate == null || rentalRate.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Rental rate must be greater than zero.");
+    public Property(int propertyID, String description, double rentalRate) {
+        // Validate PropertyID: positive integer
+        if (propertyID <= 0) {
+            throw new IllegalArgumentException("PropertyID must be a positive integer.");
         }
+
+        // Validate Description: nonempty after trimming
+        if (description == null || description.trim().isEmpty()) {
+            throw new IllegalArgumentException("Description must be a nonempty string.");
+        }
+
+        // Validate RentalRate: finite, positive decimal number
+        if (!Double.isFinite(rentalRate) || rentalRate <= 0.0) {
+            throw new IllegalArgumentException("RentalRate must be a finite, positive decimal number.");
+        }
+
         this.propertyID = propertyID;
-        this.description = description;
+        this.description = description.trim();
         this.rentalRate = rentalRate;
         this.isAvailable = true;
+    }
+
+    // Updates the rental rate. Preserves the existing rental rate if the new rate
+    // is invalid.
+    public boolean updateRentalRate(double newRate) {
+        if (!Double.isFinite(newRate) || newRate <= 0.0) {
+            // Failed update: keep prior rate unchanged and return false
+            return false;
+        }
+        this.rentalRate = newRate;
+        return true;
     }
 
     // Update description: assign new value to description
     public void updateDescription(String description) {
         this.description = description;
-    }
-
-    // Update rental rate: check (rentalRate > 0), if false throw exception
-    public void updateRentalRate(BigDecimal rentalRate) {
-        if (rentalRate == null || rentalRate.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Rental rate must be greater than zero.");
-        }
-        this.rentalRate = rentalRate;
     }
 
     // getters and setters for all attributes
@@ -39,7 +51,7 @@ public class Property {
         return description;
     }
 
-    public BigDecimal getRentalRate() {
+    public double getRentalRate() {
         return rentalRate;
     }
 

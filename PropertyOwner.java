@@ -1,26 +1,23 @@
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PropertyOwner extends User {
-    private List<Property> ownedProperties;
+    private final List<Property> ownedProperties;
 
-    // Constructor: initialize ownedProperties as an empty list
     public PropertyOwner(int userID, String firstName, String lastName, String email) {
+        // Inherit User checks through the parent constructor
         super(userID, firstName, lastName, email);
         this.ownedProperties = new ArrayList<>();
     }
 
-    // Create property: add to list if valid, catch exception if rate is invalid
-    public Property createProperty(int propertyID, String description, BigDecimal rentalRate) {
-        try {
-            Property property = new Property(propertyID, description, rentalRate);
-            this.ownedProperties.add(property);
-            return property;
-        } catch (IllegalArgumentException e) {
-            // If there's an error (e.g., rentalRate <= 0), do not add to the list
-            return null;
-        }
+    //Delegates validation to the Property constructor. Appends the property to the list ONLY after successful construction.
+    public Property createProperty(int propertyID, String description, double rentalRate) {
+        // Validation delegated to Property constructor (throws IllegalArgumentException on failure)
+        Property newProperty = new Property(propertyID, description, rentalRate);
+
+        // Appended only after successful creation
+        this.ownedProperties.add(newProperty);
+        return newProperty;
     }
 
     // Return the list of properties owned by the owner
