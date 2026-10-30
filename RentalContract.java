@@ -42,7 +42,7 @@ public class RentalContract {
         this.tenant = tenant;
         this.startDate = new Date(startDate.getTime());
         this.endDate = new Date(endDate.getTime());
-        this.rentAmount = property.getRentalRate();
+        this.rentAmount = property.getRentalRate();   // BigDecimal is immutable, so later rate changes do not affect it
         this.isActive = true;
 
         // Change the property's status only at the very end, after everything is valid
