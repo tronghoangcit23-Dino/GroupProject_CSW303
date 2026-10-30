@@ -35,5 +35,15 @@ public class Main {
         System.out.println("Property isAvailable: " + property.isAvailable() + " (Expected: true)");
         System.out.println("Contract remains in tenant's list: "
                 + (tenant.getRentalContracts().contains(contract) ? "True" : "False"));
+        // Testing invalid contract creation (Invalid ContractID and reversed dates)
+        Calendar calInvalidStart = Calendar.getInstance();
+        calInvalidStart.set(2027, Calendar.OCTOBER, 31);
+        Calendar calInvalidEnd = Calendar.getInstance();
+        calInvalidEnd.set(2026, Calendar.NOVEMBER, 1);
+
+        RentalContract invalidContract = tenant.rentProperty(-5, property, calInvalidStart.getTime(),
+                calInvalidEnd.getTime());
+        System.out.println("Invalid contract result (Expected null): " + invalidContract);
+        System.out.println("Property isAvailable remains True: " + property.isAvailable());
     }
 }
