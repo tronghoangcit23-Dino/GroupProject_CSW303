@@ -37,7 +37,6 @@ public class RentalContract {
             throw new IllegalArgumentException("Property is not available for rent.");
         }
 
-        // All checks passed: assign values (copy the dates so outside code cannot modify them)
         this.contractID = contractID;
         this.property = property;
         this.tenant = tenant;
@@ -50,10 +49,7 @@ public class RentalContract {
         property.setAvailable(false);
     }
 
-    // Terminate: deactivate the contract and make the property available again
     public void terminate() {
-        // If already terminated, do nothing, so an old contract can never
-        // re-open a property that has since been rented to someone else
         if (!this.isActive) {
             return;
         }
@@ -61,7 +57,6 @@ public class RentalContract {
         this.property.setAvailable(true);
     }
 
-    // Getters
     public int getContractID() {
         return contractID;
     }
