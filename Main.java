@@ -1,4 +1,3 @@
-import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -13,7 +12,7 @@ public class Main {
 
         PropertyOwner owner = new PropertyOwner(1, "Anna", "Nguyen", "anna@example.com");
         Tenant tenant = new Tenant(2, "Minh", "Tran", "minh@example.com");
-        Property property = owner.createProperty(101, "Apartment A101, two bedrooms", new BigDecimal("5000"));
+        Property property = owner.createProperty(101, "Apartment A101, two bedrooms", 5000);
         RentalContract contract = tenant.rentProperty(1001, property, startDate, endDate);
 
         System.out.println("--- SYSTEM TESTING RESULTS ---");
@@ -24,7 +23,7 @@ public class Main {
         System.out.println("Contract isActive: " + contract.isActive() + " (Expected: true)");
         System.out.println("Contract RentAmount: " + contract.getRentAmount() + " (Expected: 5000)");
 
-        property.updateRentalRate(new BigDecimal("5500"));
+        property.updateRentalRate(5500);
         System.out.println("\n--- AFTER UPDATING PROPERTY RENTAL RATE TO 5500 ---");
         System.out.println("Property new RentalRate: " + property.getRentalRate() + " (Expected: 5500)");
         System.out.println("Contract RentAmount remains unchanged: " + contract.getRentAmount() + " (Expected: 5000)");

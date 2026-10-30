@@ -1,4 +1,3 @@
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class RentalContract {
@@ -7,7 +6,7 @@ public class RentalContract {
     private Tenant tenant;
     private Date startDate;
     private Date endDate;
-    private BigDecimal rentAmount;   // rental rate locked in when the contract is signed
+    private double rentAmount;   // rental rate locked in when the contract is signed
     private boolean isActive;
 
     // Constructor: validate everything first.
@@ -83,7 +82,7 @@ public class RentalContract {
         return new Date(endDate.getTime());
     }
 
-    public BigDecimal getRentAmount() {
+    public double getRentAmount() {
         return rentAmount;
     }
 
