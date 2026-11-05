@@ -30,19 +30,20 @@ public class User {
     }
 
     private void validateNameAndEmail(String firstName, String lastName, String email) {
-        String nameRegex = "^[a-zA-Z\\s\\-']+$";
-        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+    String nameRegex = "^[\\p{L}\\s\\-']+$";
+    
+    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 
-        if (firstName == null || firstName.trim().isEmpty() || !firstName.trim().matches(nameRegex)) {
-            throw new IllegalArgumentException("Invalid First Name. Must not be empty and only contain letters, spaces, hyphens, and apostrophes.");
-        }
-        if (lastName == null || lastName.trim().isEmpty() || !lastName.trim().matches(nameRegex)) {
-            throw new IllegalArgumentException("Invalid Last Name. Must not be empty and only contain letters, spaces, hyphens, and apostrophes.");
-        }
-        if (email == null || email.trim().isEmpty() || !email.trim().matches(emailRegex)) {
-            throw new IllegalArgumentException("Invalid Email format.");
-        }
+    if (firstName == null || firstName.trim().isEmpty() || !firstName.trim().matches(nameRegex)) {
+        throw new IllegalArgumentException("Invalid First Name. Must not be empty and only contain letters, spaces, hyphens, and apostrophes.");
     }
+    if (lastName == null || lastName.trim().isEmpty() || !lastName.trim().matches(nameRegex)) {
+        throw new IllegalArgumentException("Invalid Last Name. Must not be empty and only contain letters, spaces, hyphens, and apostrophes.");
+    }
+    if (email == null || email.trim().isEmpty() || !email.trim().matches(emailRegex)) {
+        throw new IllegalArgumentException("Invalid Email format.");
+    }
+}
 
     public int getUserID() {
         return userID;
