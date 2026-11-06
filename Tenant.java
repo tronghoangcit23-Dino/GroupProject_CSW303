@@ -11,14 +11,9 @@ public class Tenant extends User {
     }
 
     public RentalContract rentProperty(int contractID, Property property, Date startDate, Date endDate) {
-        try {
-            RentalContract contract = new RentalContract(contractID, property, this, startDate, endDate);
-            this.rentalContracts.add(contract);
-            return contract;
-        } catch (IllegalArgumentException e) {
-            System.err.println("Contract creation failed: " + e.getMessage());
-            return null;
-        }
+        RentalContract contract = new RentalContract(contractID, property, this, startDate, endDate);
+        this.rentalContracts.add(contract);
+        return contract;
     }
 
     public List<RentalContract> getRentalContracts() {
